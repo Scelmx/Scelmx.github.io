@@ -7,4 +7,5 @@ export default defineConfig({
   build: {
     outDir: '../../docs/admin',
   },
+  base: '/admin/',
 })
