@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>需求提交 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        .nav-links li {
+            margin-left: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            font-size: 18px;
+            color: #777;
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        .template-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .template-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .template-icon {
+            font-size: 40px;
+            margin-right: 20px;
+            color: #3498db;
+        }
+        .template-info h3 {
+            margin-bottom: 5px;
+        }
+        .template-info p {
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+        }
+        .btn-outline:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        .upload-area.active {
+            border-color: #3498db;
+            background-color: #e1f0fa;
+        }
+        .upload-icon {
+            font-size: 60px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        .upload-text {
+            margin-bottom: 15px;
+        }
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .step {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .step-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .step-content h3 {
+            margin-bottom: 10px;
+        }
+        .step-content p {
+            color: #777;
+        }
+        .file-info {
+            background-color: #e1f0fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+        .file-info.show {
+            display: block;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .contact-info {
+            list-style: none;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">微企定制</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html">关于我们</a></li>
+                    <li><a href="cases.html">案例</a></li>
+                    <li><a href="requirement.html" class="active">需求提交</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>需求提交</h1>
+            <p>提交您的网站定制需求，我们将为您量身打造专属方案</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <h2 class="card-title">如何提交需求</h2>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>下载需求模板</h3>
+                        <p>选择适合您企业类型的需求模板文档，点击下载按钮获取模板。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>填写需求文档</h3>
+                        <p>按照模板中的指导填写您的具体需求，包括网站功能、设计风格、参考案例等信息。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>上传需求文档</h3>
+                        <p>填写完毕后，将文档上传至本页面，并留下您的联系方式，我们将尽快与您联系。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-columns">
+                <div class="card">
+                    <h2 class="card-title">需求模板下载</h2>
+                    <div class="template-card">
+                        <div class="template-icon">📄</div>
+                        <div class="template-info">
+                            <h3>通用企业网站需求模板</h3>
+                            <p>适用于大多数小微企业的通用需求模板，包含基本的网站功能需求调研内容。</p>
+                            <a href="#" class="btn" download="企业网站需求模板.docx">下载模板</a>
+                        </div>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">📄</div>
+                        <div class="template-info">
+                            <h3>电商网站需求模板</h3>
+                            <p>适用于需要在线销售产品的企业，包含产品展示、购物车、支付等功能需求。</p>
+                            <a href="#" class="btn" download="电商网站需求模板.docx">下载模板</a>
+                        </div>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">📄</div>
+                        <div class="template-info">
+                            <h3>服务行业网站需求模板</h3>
+                            <p>适用于提供专业服务的企业，包含服务介绍、在线预约、案例展示等功能需求。</p>
+                            <a href="#" class="btn" download="服务行业网站需求模板.docx">下载模板</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">需求提交</h2>
+                    <div class="success-message" id="successMessage">
+                        <strong>提交成功！</strong> 我们已收到您的需求文档，将在1-2个工作日内与您联系。
+                    </div>
+                    <form id="requirementForm">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📤</div>
+                            <div class="upload-text">
+                                <p>点击或拖拽文件到此处上传</p>
+                                <p>支持 .doc, .docx, .pdf 格式，文件大小不超过10MB</p>
+                            </div>
+                            <input type="file" class="file-input" id="fileInput" accept=".doc,.docx,.pdf">
+                        </div>
+                        <div class="file-info" id="fileInfo">
+                            已选择文件: <span id="fileName"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="name">您的姓名 *</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">公司名称 *</label>
+                            <input type="text" class="form-control" id="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">联系电话 *</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">电子邮箱 *</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">其他补充说明（选填）</label>
+                            <textarea class="form-control" id="message"></textarea>
+                        </div>
+                        <button type="submit" class="btn">提交需求</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">常见问题</h2>
+                <div class="two-columns">
+                    <div>
+                        <h3>提交需求后多久能收到回复？</h3>
+                        <p>我们会在收到您的需求后1-2个工作日内与您联系，确认需求细节并提供初步方案。</p>
+                        
+                        <h3>如何知道我的网站需要哪些功能？</h3>
+                        <p>您可以参考我们的案例，或者下载需求模板，模板中有详细的功能列表供您选择。如有疑问，也可以直接联系我们咨询。</p>
+                    </div>
+                    <div>
+                        <h3>一个网站开发需要多长时间？</h3>
+                        <p>根据网站的复杂程度不同，一般简单的企业官网需要2-4周，复杂的电商或功能型网站可能需要1-3个月。</p>
+                        
+                        <h3>提交需求需要支付费用吗？</h3>
+                        <p>提交需求和获取初步方案是完全免费的。只有在您确认方案并决定合作后，才需要支付首期款项。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>微企定制是专注于为小微企业提供高质量网站定制服务的团队，我们致力于帮助小微企业提升品牌形象，拓展在线业务。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>电话：123-4567-8910</li>
+                        <li>邮箱：contact@weiqi.com</li>
+                        <li>地址：北京市朝阳区科技园A座501</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul class="nav-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="cases.html">案例</a></li>
+                        <li><a href="requirement.html">需求提交</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 微企定制 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const requirementForm = document.getElementById('requirementForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 拖拽上传效果
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('active');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    updateFileInfo();
+                }
+            });
+            
+            // 文件选择后显示文件名
+            fileInput.addEventListener('change', updateFileInfo);
+            
+            function updateFileInfo() {
+                if (fileInput.files.length > 0) {
+                    fileName.textContent = fileInput.files[0].name;
+                    fileInfo.classList.add('show');
+                } else {
+                    fileInfo.classList.remove('show');
+                }
+            }
+            
+            // 表单提交
+            requirementForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 在实际应用中，这里会有表单验证和AJAX提交逻辑
+                // 这里仅做示意，显示成功消息
+                successMessage.classList.add('show');
+                requirementForm.reset();
+                fileInfo.classList.remove('show');
+                
+                // 5秒后隐藏成功消息
+                setTimeout(function() {
+                    successMessage.classList.remove('show');
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html> 

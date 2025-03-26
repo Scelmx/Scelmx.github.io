@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们管理 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #1a2530;
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .brand-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .user-details {
+            flex-grow: 1;
+        }
+        .user-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .user-role {
+            font-size: 12px;
+            color: #bbb;
+        }
+        .menu {
+            padding: 10px 0;
+        }
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #bbb;
+            padding: 15px 20px 5px;
+        }
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .menu-item.active {
+            background-color: #3498db;
+        }
+        .menu-icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header-actions {
+            display: flex;
+        }
+        .header-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .header-btn:hover {
+            background-color: #2980b9;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .search-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .filter-select {
+            padding: 9px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px;
+            min-width: 150px;
+        }
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .contacts-table th,
+        .contacts-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .contacts-table th {
+            background-color: #f9f9f9;
+            font-weight: 500;
+        }
+        .contacts-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+        .status.unread {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        .status.read {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .status.replied {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+        .action-btn {
+            display: inline-block;
+            background-color: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #ddd;
+        }
+        .action-btn.view {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .action-btn.view:hover {
+            background-color: #2980b9;
+        }
+        .action-btn.delete {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .action-btn.delete:hover {
+            background-color: #c0392b;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 20px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            display: flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .pagination a:hover, .pagination a.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: auto;
+            padding: 50px 0;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: modalOpen 0.3s ease;
+        }
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        .form-group + .form-group {
+            margin-left: 15px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-control:disabled {
+            background-color: #f9f9f9;
+        }
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        .contact-info-card {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .contact-info-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .contact-info-list {
+            list-style: none;
+        }
+        .contact-info-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .contact-info-label {
+            font-weight: 500;
+            width: 80px;
+        }
+        .contact-info-value {
+            flex-grow: 1;
+        }
+        .contact-info-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .reply-box {
+            margin-top: 20px;
+        }
+        .reply-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group + .form-group {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-logo">微</div>
+                <div class="brand-text">微企定制后台</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div class="user-details">
+                    <div class="user-name">管理员</div>
+                    <div class="user-role">系统管理员</div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-title">主菜单</div>
+                <a href="dashboard.html" class="menu-item">
+                    <div class="menu-icon">📊</div>
+                    仪表盘
+                </a>
+                <a href="case-management.html" class="menu-item">
+                    <div class="menu-icon">📁</div>
+                    案例管理
+                </a>
+                <a href="requirement-management.html" class="menu-item">
+                    <div class="menu-icon">📝</div>
+                    需求管理
+                </a>
+                <a href="contact-management.html" class="menu-item active">
+                    <div class="menu-icon">📞</div>
+                    联系我们管理
+                </a>
+                
+                <div class="menu-title">系统设置</div>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">👤</div>
+                    用户管理
+                </a>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">⚙️</div>
+                    系统设置
+                </a>
+                <a href="index.html" class="menu-item">
+                    <div class="menu-icon">🚪</div>
+                    退出登录
+                </a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                <div class="page-title">联系我们管理</div>
+                <div class="header-actions">
+                    <button class="header-btn" id="editContactInfoBtn">编辑联系信息</button>
+                </div>
+            </div>
+            
+            <div class="card contact-info-card">
+                <div class="contact-info-title">
+                    <span>公司联系信息</span>
+                </div>
+                <ul class="contact-info-list">
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">公司名称：</div>
+                        <div class="contact-info-value">微企定制科技有限公司</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">地址：</div>
+                        <div class="contact-info-value">北京市朝阳区科技园区88号创新大厦15层</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">电话：</div>
+                        <div class="contact-info-value">010-12345678</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">邮箱：</div>
+                        <div class="contact-info-value">contact@microenterprise.com</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">工作时间：</div>
+                        <div class="contact-info-value">周一至周五 9:00-18:00</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">联系信息列表</div>
+                    <div>总计：15条消息</div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="搜索联系人...">
+                            <button class="search-btn">搜索</button>
+                        </div>
+                        <div>
+                            <select class="filter-select">
+                                <option value="">所有状态</option>
+                                <option value="unread">未读</option>
+                                <option value="read">已读</option>
+                                <option value="replied">已回复</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <table class="contacts-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>姓名</th>
+                                <th>联系方式</th>
+                                <th>主题</th>
+                                <th>提交时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>张三</td>
+                                <td>138****1234</td>
+                                <td>网站定制咨询</td>
+                                <td>2023-09-15</td>
+                                <td><span class="status unread">未读</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="1">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="1">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>李四</td>
+                                <td>139****5678</td>
+                                <td>价格咨询</td>
+                                <td>2023-09-14</td>
+                                <td><span class="status read">已读</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="2">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="2">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>王五</td>
+                                <td>wangwu@example.com</td>
+                                <td>合作请求</td>
+                                <td>2023-09-12</td>
+                                <td><span class="status replied">已回复</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="3">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="3">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>赵六</td>
+                                <td>135****4321</td>
+                                <td>售后问题</td>
+                                <td>2023-09-10</td>
+                                <td><span class="status unread">未读</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="4">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="4">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>钱七</td>
+                                <td>qianqi@example.com</td>
+                                <td>功能咨询</td>
+                                <td>2023-09-08</td>
+                                <td><span class="status replied">已回复</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="5">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="5">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>孙八</td>
+                                <td>137****8765</td>
+                                <td>投诉建议</td>
+                                <td>2023-09-05</td>
+                                <td><span class="status read">已读</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="6">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="6">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>周九</td>
+                                <td>zhoujiu@example.com</td>
+                                <td>网站优化</td>
+                                <td>2023-09-03</td>
+                                <td><span class="status replied">已回复</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="7">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="7">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>吴十</td>
+                                <td>136****2468</td>
+                                <td>服务咨询</td>
+                                <td>2023-09-01</td>
+                                <td><span class="status read">已读</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="8">查看</a>
+                                    <a href="#" class="action-btn delete" data-id="8">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <ul class="pagination">
+                        <li><a href="#">&laquo;</a></li>
+                        <li><a href="#" class="active">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 查看消息模态框 -->
+    <div class="modal" id="viewContactModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">查看联系信息</div>
+                <button class="close-btn" id="closeViewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">编号</label>
+                        <input type="text" class="form-control" id="contactId" disabled value="#1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">提交时间</label>
+                        <input type="text" class="form-control" id="contactDate" disabled value="2023-09-15 10:30:22">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">状态</label>
+                        <select class="form-control" id="contactStatus">
+                            <option value="unread">未读</option>
+                            <option value="read">已读</option>
+                            <option value="replied">已回复</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">姓名</label>
+                        <input type="text" class="form-control" id="contactName" disabled value="张三">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">电话</label>
+                        <input type="text" class="form-control" id="contactPhone" disabled value="13812341234">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="text" class="form-control" id="contactEmail" disabled value="zhangsan@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">主题</label>
+                    <input type="text" class="form-control" id="contactSubject" disabled value="网站定制咨询">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">留言内容</label>
+                    <textarea class="form-control" id="contactMessage" disabled rows="5">您好，我是一家小型餐饮企业的老板，想了解一下定制一个展示菜品和在线预订的网站需要多少费用？有没有相关的案例可以参考？希望能尽快得到回复，谢谢！</textarea>
+                </div>
+                
+                <div class="reply-box">
+                    <label class="form-label">回复内容</label>
+                    <textarea class="reply-textarea" id="replyContent" placeholder="输入回复内容..."></textarea>
+                    <div style="text-align: right;">
+                        <button class="action-btn view" id="sendReply">发送回复</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="closeView">关闭</button>
+                <button class="action-btn view" id="saveStatus">保存状态</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑联系信息模态框 -->
+    <div class="modal" id="editContactInfoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑联系信息</div>
+                <button class="close-btn" id="closeEditInfoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">公司名称</label>
+                    <input type="text" class="form-control" id="companyName" value="微企定制科技有限公司">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">地址</label>
+                    <input type="text" class="form-control" id="companyAddress" value="北京市朝阳区科技园区88号创新大厦15层">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">电话</label>
+                    <input type="text" class="form-control" id="companyPhone" value="010-12345678">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="text" class="form-control" id="companyEmail" value="contact@microenterprise.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">工作时间</label>
+                    <input type="text" class="form-control" id="workHours" value="周一至周五 9:00-18:00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="cancelEditInfo">取消</button>
+                <button class="action-btn view" id="saveContactInfo">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const viewContactModal = document.getElementById('viewContactModal');
+            const editContactInfoModal = document.getElementById('editContactInfoModal');
+            const closeViewModalBtn = document.getElementById('closeViewModal');
+            const closeEditInfoModalBtn = document.getElementById('closeEditInfoModal');
+            const closeViewBtn = document.getElementById('closeView');
+            const cancelEditInfoBtn = document.getElementById('cancelEditInfo');
+            const viewButtons = document.querySelectorAll('.action-btn.view');
+            const deleteButtons = document.querySelectorAll('.action-btn.delete');
+            const editContactInfoBtn = document.getElementById('editContactInfoBtn');
+            const saveContactInfoBtn = document.getElementById('saveContactInfo');
+            const sendReplyBtn = document.getElementById('sendReply');
+            const saveStatusBtn = document.getElementById('saveStatus');
+            
+            // 侧边栏切换
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // 响应式处理
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // 打开查看消息模态框
+            viewButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const contactId = this.getAttribute('data-id');
+                    
+                    // 在实际应用中，这里会根据ID从后端获取数据
+                    // 此处仅做示例，实际数据已在HTML中
+                    
+                    viewContactModal.style.display = 'block';
+                });
+            });
+            
+            // 关闭查看消息模态框
+            closeViewModalBtn.addEventListener('click', function() {
+                viewContactModal.style.display = 'none';
+            });
+            
+            closeViewBtn.addEventListener('click', function() {
+                viewContactModal.style.display = 'none';
+            });
+            
+            // 打开编辑联系信息模态框
+            editContactInfoBtn.addEventListener('click', function() {
+                editContactInfoModal.style.display = 'block';
+            });
+            
+            // 关闭编辑联系信息模态框
+            closeEditInfoModalBtn.addEventListener('click', function() {
+                editContactInfoModal.style.display = 'none';
+            });
+            
+            cancelEditInfoBtn.addEventListener('click', function() {
+                editContactInfoModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭模态框
+            window.addEventListener('click', function(event) {
+                if (event.target === viewContactModal) {
+                    viewContactModal.style.display = 'none';
+                }
+                if (event.target === editContactInfoModal) {
+                    editContactInfoModal.style.display = 'none';
+                }
+            });
+            
+            // 删除消息操作
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const contactId = this.getAttribute('data-id');
+                    const confirmDelete = confirm('确定要删除这条消息吗？');
+                    
+                    if (confirmDelete) {
+                        // 在实际应用中，这里会调用后端API删除消息
+                        alert('消息已删除');
+                    }
+                });
+            });
+            
+            // 发送回复
+            sendReplyBtn.addEventListener('click', function() {
+                const replyContent = document.getElementById('replyContent').value.trim();
+                
+                if (replyContent) {
+                    // 在实际应用中，这里会提交回复到后端
+                    document.getElementById('contactStatus').value = 'replied';
+                    alert('回复已发送');
+                    document.getElementById('replyContent').value = '';
+                } else {
+                    alert('请输入回复内容');
+                }
+            });
+            
+            // 保存状态
+            saveStatusBtn.addEventListener('click', function() {
+                const newStatus = document.getElementById('contactStatus').value;
+                
+                // 在实际应用中，这里会将新状态提交到后端
+                alert('状态已更新');
+                viewContactModal.style.display = 'none';
+            });
+            
+            // 保存联系信息
+            saveContactInfoBtn.addEventListener('click', function() {
+                // 在实际应用中，这里会将新联系信息提交到后端
+                alert('联系信息已更新');
+                editContactInfoModal.style.display = 'none';
+                
+                // 模拟更新页面上的联系信息
+                const infoList = document.querySelector('.contact-info-list');
+                const companyName = document.getElementById('companyName').value;
+                const companyAddress = document.getElementById('companyAddress').value;
+                const companyPhone = document.getElementById('companyPhone').value;
+                const companyEmail = document.getElementById('companyEmail').value;
+                const workHours = document.getElementById('workHours').value;
+                
+                infoList.innerHTML = `
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">公司名称：</div>
+                        <div class="contact-info-value">${companyName}</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">地址：</div>
+                        <div class="contact-info-value">${companyAddress}</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">电话：</div>
+                        <div class="contact-info-value">${companyPhone}</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">邮箱：</div>
+                        <div class="contact-info-value">${companyEmail}</div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-info-label">工作时间：</div>
+                        <div class="contact-info-value">${workHours}</div>
+                    </li>
+                `;
+            });
+        });
+    </script>
+</body>
+</html> 

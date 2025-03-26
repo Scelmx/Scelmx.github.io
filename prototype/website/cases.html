@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案例展示 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        .nav-links li {
+            margin-left: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            font-size: 18px;
+            color: #777;
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .filter-btn {
+            background: none;
+            border: none;
+            padding: 8px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .filter-btn.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .filter-btn:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .case-item {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .case-item:hover {
+            transform: translateY(-5px);
+        }
+        .case-img {
+            height: 220px;
+            background-color: #f5f5f5;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .case-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .case-content {
+            padding: 20px;
+        }
+        .case-content h3 {
+            margin-bottom: 10px;
+        }
+        .case-content p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 40px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .pagination a:hover, .pagination a.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .contact-info {
+            list-style: none;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">微企定制</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html">关于我们</a></li>
+                    <li><a href="cases.html" class="active">案例</a></li>
+                    <li><a href="requirement.html">需求提交</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>案例展示</h1>
+            <p>探索我们为小微企业打造的精彩网站</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="food">餐饮美食</button>
+                <button class="filter-btn" data-filter="education">教育培训</button>
+                <button class="filter-btn" data-filter="beauty">美容护理</button>
+                <button class="filter-btn" data-filter="retail">零售商店</button>
+                <button class="filter-btn" data-filter="service">服务行业</button>
+            </div>
+
+            <div class="cases-grid">
+                <div class="case-item" data-category="food">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220');">
+                        <span class="case-category">餐饮美食</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>川香餐厅官网</h3>
+                        <p>为本地知名川菜餐厅打造的品牌形象网站，展示菜品特色和线上预订功能。</p>
+                        <a href="case-detail.html?id=1" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="education">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/f39c12/fff');">
+                        <span class="case-category">教育培训</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>未来学院网站</h3>
+                        <p>专注于少儿编程的教育培训机构网站，包含课程展示和在线报名系统。</p>
+                        <a href="case-detail.html?id=2" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="beauty">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/27ae60/fff');">
+                        <span class="case-category">美容护理</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>清颜美容中心</h3>
+                        <p>高端美容护理中心的品牌网站，展示专业服务和在线预约功能。</p>
+                        <a href="case-detail.html?id=3" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="retail">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/8e44ad/fff');">
+                        <span class="case-category">零售商店</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>自然生活杂货店</h3>
+                        <p>专注于有机食品和环保用品的零售店网站，包含产品展示和电商功能。</p>
+                        <a href="case-detail.html?id=4" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="service">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/e74c3c/fff');">
+                        <span class="case-category">服务行业</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>安心家政服务</h3>
+                        <p>提供专业家政服务的企业网站，展示服务内容和在线预约系统。</p>
+                        <a href="case-detail.html?id=5" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="food">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/3498db/fff');">
+                        <span class="case-category">餐饮美食</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>甜蜜烘焙坊</h3>
+                        <p>专注于手工蛋糕和甜点的烘焙店网站，展示产品和线上订购系统。</p>
+                        <a href="case-detail.html?id=6" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="education">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/f1c40f/fff');">
+                        <span class="case-category">教育培训</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>乐途语言中心</h3>
+                        <p>提供多语种培训的语言学习中心网站，包含课程介绍和学习资源。</p>
+                        <a href="case-detail.html?id=7" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="beauty">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/1abc9c/fff');">
+                        <span class="case-category">美容护理</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>康健按摩理疗</h3>
+                        <p>专业按摩和理疗中心的品牌网站，展示特色服务和健康资讯。</p>
+                        <a href="case-detail.html?id=8" class="btn">查看详情</a>
+                    </div>
+                </div>
+
+                <div class="case-item" data-category="retail">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/34495e/fff');">
+                        <span class="case-category">零售商店</span>
+                    </div>
+                    <div class="case-content">
+                        <h3>原木家具店</h3>
+                        <p>手工原木家具零售店的品牌网站，展示产品特色和定制服务。</p>
+                        <a href="case-detail.html?id=9" class="btn">查看详情</a>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="pagination">
+                <li><a href="#" class="active">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>微企定制是专注于为小微企业提供高质量网站定制服务的团队，我们致力于帮助小微企业提升品牌形象，拓展在线业务。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>电话：123-4567-8910</li>
+                        <li>邮箱：contact@weiqi.com</li>
+                        <li>地址：北京市朝阳区科技园A座501</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul class="nav-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="cases.html">案例</a></li>
+                        <li><a href="requirement.html">需求提交</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 微企定制 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const caseItems = document.querySelectorAll('.case-item');
+            
+            // 筛选功能
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    caseItems.forEach(item => {
+                        if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案例管理 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #1a2530;
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .brand-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .user-details {
+            flex-grow: 1;
+        }
+        .user-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .user-role {
+            font-size: 12px;
+            color: #bbb;
+        }
+        .menu {
+            padding: 10px 0;
+        }
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #bbb;
+            padding: 15px 20px 5px;
+        }
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .menu-item.active {
+            background-color: #3498db;
+        }
+        .menu-icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header-actions {
+            display: flex;
+        }
+        .header-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .header-btn:hover {
+            background-color: #2980b9;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .search-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .filter-select {
+            padding: 9px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px;
+            min-width: 150px;
+        }
+        .cases-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cases-table th,
+        .cases-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .cases-table th {
+            background-color: #f9f9f9;
+            font-weight: 500;
+        }
+        .cases-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+        .status.published {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .status.draft {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+        .status.archived {
+            background-color: rgba(149, 165, 166, 0.1);
+            color: #95a5a6;
+        }
+        .action-btn {
+            display: inline-block;
+            background-color: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #ddd;
+        }
+        .action-btn.view {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .action-btn.view:hover {
+            background-color: #2980b9;
+        }
+        .action-btn.edit {
+            background-color: #f39c12;
+            color: #fff;
+        }
+        .action-btn.edit:hover {
+            background-color: #d35400;
+        }
+        .action-btn.delete {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .action-btn.delete:hover {
+            background-color: #c0392b;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 20px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            display: flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .pagination a:hover, .pagination a.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: auto;
+            padding: 50px 0;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: modalOpen 0.3s ease;
+        }
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-logo">微</div>
+                <div class="brand-text">微企定制后台</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div class="user-details">
+                    <div class="user-name">管理员</div>
+                    <div class="user-role">系统管理员</div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-title">主菜单</div>
+                <a href="dashboard.html" class="menu-item">
+                    <div class="menu-icon">📊</div>
+                    仪表盘
+                </a>
+                <a href="case-management.html" class="menu-item active">
+                    <div class="menu-icon">📁</div>
+                    案例管理
+                </a>
+                <a href="requirement-management.html" class="menu-item">
+                    <div class="menu-icon">📝</div>
+                    需求管理
+                </a>
+                <a href="contact-management.html" class="menu-item">
+                    <div class="menu-icon">📞</div>
+                    联系我们管理
+                </a>
+                
+                <div class="menu-title">系统设置</div>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">👤</div>
+                    用户管理
+                </a>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">⚙️</div>
+                    系统设置
+                </a>
+                <a href="index.html" class="menu-item">
+                    <div class="menu-icon">🚪</div>
+                    退出登录
+                </a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                <div class="page-title">案例管理</div>
+                <div class="header-actions">
+                    <button class="header-btn" id="openAddModal">添加案例</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">案例列表</div>
+                    <div>总计：24个案例</div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="搜索案例...">
+                            <button class="search-btn">搜索</button>
+                        </div>
+                        <div>
+                            <select class="filter-select">
+                                <option value="">所有行业</option>
+                                <option value="food">餐饮美食</option>
+                                <option value="education">教育培训</option>
+                                <option value="beauty">美容护理</option>
+                                <option value="retail">零售商店</option>
+                                <option value="service">服务行业</option>
+                            </select>
+                            <select class="filter-select">
+                                <option value="">所有状态</option>
+                                <option value="published">已发布</option>
+                                <option value="draft">草稿</option>
+                                <option value="archived">已归档</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <table class="cases-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>案例名称</th>
+                                <th>行业类型</th>
+                                <th>添加时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>川香餐厅官网</td>
+                                <td>餐饮美食</td>
+                                <td>2023-05-15</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="1">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="1">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>未来学院网站</td>
+                                <td>教育培训</td>
+                                <td>2023-06-22</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="2">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="2">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>清颜美容中心</td>
+                                <td>美容护理</td>
+                                <td>2023-07-10</td>
+                                <td><span class="status draft">草稿</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="3">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="3">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>自然生活杂货店</td>
+                                <td>零售商店</td>
+                                <td>2023-08-05</td>
+                                <td><span class="status draft">草稿</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="4">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="4">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>安心家政服务</td>
+                                <td>服务行业</td>
+                                <td>2023-04-12</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="5">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="5">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>甜蜜烘焙坊</td>
+                                <td>餐饮美食</td>
+                                <td>2023-03-25</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="6">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="6">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>乐途语言中心</td>
+                                <td>教育培训</td>
+                                <td>2023-02-08</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="7">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="7">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>康健按摩理疗</td>
+                                <td>美容护理</td>
+                                <td>2023-01-15</td>
+                                <td><span class="status published">已发布</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="8">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="8">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>原木家具店</td>
+                                <td>零售商店</td>
+                                <td>2022-12-20</td>
+                                <td><span class="status archived">已归档</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="9">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="9">删除</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>品味咖啡馆</td>
+                                <td>餐饮美食</td>
+                                <td>2022-11-05</td>
+                                <td><span class="status archived">已归档</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view">查看</a>
+                                    <a href="#" class="action-btn edit" data-id="10">编辑</a>
+                                    <a href="#" class="action-btn delete" data-id="10">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <ul class="pagination">
+                        <li><a href="#">&laquo;</a></li>
+                        <li><a href="#" class="active">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 添加案例模态框 -->
+    <div class="modal" id="addCaseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">添加新案例</div>
+                <button class="close-btn" id="closeAddModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addCaseForm">
+                    <div class="form-group">
+                        <label for="caseName">案例名称 *</label>
+                        <input type="text" class="form-control" id="caseName" placeholder="输入案例名称" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseIndustry">行业类型 *</label>
+                        <select class="form-control" id="caseIndustry" required>
+                            <option value="">请选择行业类型</option>
+                            <option value="food">餐饮美食</option>
+                            <option value="education">教育培训</option>
+                            <option value="beauty">美容护理</option>
+                            <option value="retail">零售商店</option>
+                            <option value="service">服务行业</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseDescription">案例简介 *</label>
+                        <textarea class="form-control" id="caseDescription" placeholder="输入案例简介" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseContent">案例详情 *</label>
+                        <textarea class="form-control" id="caseContent" placeholder="输入案例详细内容" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseImage">封面图片</label>
+                        <input type="file" class="form-control" id="caseImage" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseStatus">状态</label>
+                        <select class="form-control" id="caseStatus">
+                            <option value="draft">草稿</option>
+                            <option value="published">发布</option>
+                            <option value="archived">归档</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="caseFeature">
+                        <label for="caseFeature">设为精选案例</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="cancelAdd">取消</button>
+                <button class="action-btn view" id="submitAddCase">添加</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑案例模态框 -->
+    <div class="modal" id="editCaseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">编辑案例</div>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCaseForm">
+                    <input type="hidden" id="editCaseId">
+                    <div class="form-group">
+                        <label for="editCaseName">案例名称 *</label>
+                        <input type="text" class="form-control" id="editCaseName" placeholder="输入案例名称" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCaseIndustry">行业类型 *</label>
+                        <select class="form-control" id="editCaseIndustry" required>
+                            <option value="">请选择行业类型</option>
+                            <option value="food">餐饮美食</option>
+                            <option value="education">教育培训</option>
+                            <option value="beauty">美容护理</option>
+                            <option value="retail">零售商店</option>
+                            <option value="service">服务行业</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCaseDescription">案例简介 *</label>
+                        <textarea class="form-control" id="editCaseDescription" placeholder="输入案例简介" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCaseContent">案例详情 *</label>
+                        <textarea class="form-control" id="editCaseContent" placeholder="输入案例详细内容" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCaseImage">封面图片</label>
+                        <input type="file" class="form-control" id="editCaseImage" accept="image/*">
+                        <div style="margin-top: 10px;">
+                            <img src="https://via.placeholder.com/100x60" alt="当前图片" style="max-width: 100px;">
+                            <span style="margin-left: 10px;">当前图片</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCaseStatus">状态</label>
+                        <select class="form-control" id="editCaseStatus">
+                            <option value="draft">草稿</option>
+                            <option value="published">发布</option>
+                            <option value="archived">归档</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="editCaseFeature">
+                        <label for="editCaseFeature">设为精选案例</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="cancelEdit">取消</button>
+                <button class="action-btn view" id="submitEditCase">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const addCaseModal = document.getElementById('addCaseModal');
+            const editCaseModal = document.getElementById('editCaseModal');
+            const openAddModalBtn = document.getElementById('openAddModal');
+            const closeAddModalBtn = document.getElementById('closeAddModal');
+            const cancelAddBtn = document.getElementById('cancelAdd');
+            const closeEditModalBtn = document.getElementById('closeEditModal');
+            const cancelEditBtn = document.getElementById('cancelEdit');
+            const editButtons = document.querySelectorAll('.action-btn.edit');
+            const deleteButtons = document.querySelectorAll('.action-btn.delete');
+            
+            // 侧边栏切换
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // 响应式处理
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // 打开添加案例模态框
+            openAddModalBtn.addEventListener('click', function() {
+                addCaseModal.style.display = 'block';
+            });
+            
+            // 关闭添加案例模态框
+            closeAddModalBtn.addEventListener('click', function() {
+                addCaseModal.style.display = 'none';
+            });
+            
+            cancelAddBtn.addEventListener('click', function() {
+                addCaseModal.style.display = 'none';
+            });
+            
+            // 关闭编辑案例模态框
+            closeEditModalBtn.addEventListener('click', function() {
+                editCaseModal.style.display = 'none';
+            });
+            
+            cancelEditBtn.addEventListener('click', function() {
+                editCaseModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭模态框
+            window.addEventListener('click', function(event) {
+                if (event.target === addCaseModal) {
+                    addCaseModal.style.display = 'none';
+                }
+                if (event.target === editCaseModal) {
+                    editCaseModal.style.display = 'none';
+                }
+            });
+            
+            // 打开编辑案例模态框
+            editButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const caseId = this.getAttribute('data-id');
+                    document.getElementById('editCaseId').value = caseId;
+                    
+                    // 在实际应用中，这里会根据案例ID从后端获取案例数据
+                    // 这里仅做示意，使用模拟数据填充表单
+                    const caseData = {
+                        name: '川香餐厅官网',
+                        industry: 'food',
+                        description: '为本地知名川菜餐厅打造的品牌形象网站，展示菜品特色和线上预订功能。',
+                        content: '详细介绍...',
+                        status: 'published',
+                        featured: true
+                    };
+                    
+                    document.getElementById('editCaseName').value = caseData.name;
+                    document.getElementById('editCaseIndustry').value = caseData.industry;
+                    document.getElementById('editCaseDescription').value = caseData.description;
+                    document.getElementById('editCaseContent').value = caseData.content;
+                    document.getElementById('editCaseStatus').value = caseData.status;
+                    document.getElementById('editCaseFeature').checked = caseData.featured;
+                    
+                    editCaseModal.style.display = 'block';
+                });
+            });
+            
+            // 删除案例操作
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const caseId = this.getAttribute('data-id');
+                    const confirmDelete = confirm('确定要删除这个案例吗？');
+                    
+                    if (confirmDelete) {
+                        // 在实际应用中，这里会调用后端API删除案例
+                        alert('案例已删除');
+                    }
+                });
+            });
+            
+            // 添加案例表单提交
+            document.getElementById('submitAddCase').addEventListener('click', function() {
+                const form = document.getElementById('addCaseForm');
+                if (form.checkValidity()) {
+                    // 在实际应用中，这里会将表单数据提交到后端
+                    alert('案例添加成功');
+                    addCaseModal.style.display = 'none';
+                    form.reset();
+                } else {
+                    alert('请填写所有必填字段');
+                }
+            });
+            
+            // 编辑案例表单提交
+            document.getElementById('submitEditCase').addEventListener('click', function() {
+                const form = document.getElementById('editCaseForm');
+                if (form.checkValidity()) {
+                    // 在实际应用中，这里会将表单数据提交到后端
+                    alert('案例修改成功');
+                    editCaseModal.style.display = 'none';
+                } else {
+                    alert('请填写所有必填字段');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

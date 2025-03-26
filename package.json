@@ -1,0 +1,17 @@
+{
+  "name": "weiqi-custom-website",
+  "version": "1.0.0",
+  "description": "微企定制网站和管理系统",
+  "main": "index.js",
+  "scripts": {
+    "dev:website": "cd views/website && pnpm run dev",
+    "dev:admin": "cd views/admin && pnpm run dev",
+    "build:website": "cd views/website && pnpm run build",
+    "build:admin": "cd views/admin && pnpm run build",
+    "preview:website": "cd views/website && pnpm run preview",
+    "preview:admin": "cd views/admin && pnpm run preview"
+  },
+  "keywords": ["website", "admin", "react", "antd"],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        .nav-links li {
+            margin-left: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            font-size: 18px;
+            color: #777;
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-title h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .section-title p {
+            color: #777;
+            font-size: 16px;
+        }
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+        .about-img {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .about-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .about-text p {
+            margin-bottom: 15px;
+        }
+        .capabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .capability-item {
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .capability-item:hover {
+            transform: translateY(-10px);
+        }
+        .capability-icon {
+            font-size: 40px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+        .capability-item h3 {
+            margin-bottom: 15px;
+        }
+        .team {
+            margin-top: 50px;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .team-member {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        .member-img {
+            height: 250px;
+            background-color: #f5f5f5;
+            background-size: cover;
+            background-position: center;
+        }
+        .member-info {
+            padding: 20px;
+        }
+        .member-info h3 {
+            margin-bottom: 5px;
+        }
+        .member-info p {
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 15px;
+        }
+        .social-links li {
+            margin: 0 5px;
+        }
+        .social-links a {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            transition: background-color 0.3s;
+        }
+        .social-links a:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .contact-info {
+            list-style: none;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">微企定制</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html" class="active">关于我们</a></li>
+                    <li><a href="cases.html">案例</a></li>
+                    <li><a href="requirement.html">需求提交</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>关于我们</h1>
+            <p>了解我们的团队与企业实力</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="https://via.placeholder.com/600x400" alt="关于微企定制">
+                </div>
+                <div class="about-text">
+                    <h3>我们的故事</h3>
+                    <p>微企定制成立于2018年，是一家专注于为小微企业提供高质量网站定制服务的团队。我们深知在当今数字化时代，一个专业的网站对于小微企业的品牌建设和业务拓展有着至关重要的作用。</p>
+                    <p>五年来，我们已经为超过200家小微企业提供了网站设计和开发服务，帮助他们在数字世界中建立起专业的品牌形象，提升了企业的影响力和竞争力。</p>
+                    <p>我们的团队由一群充满激情和创造力的设计师、开发者和营销专家组成，他们拥有丰富的经验和专业知识，致力于为客户提供最优质的服务。</p>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <h2>我们的能力</h2>
+                <p>我们提供全方位的网站定制服务</p>
+            </div>
+            <div class="capabilities">
+                <div class="capability-item">
+                    <div class="capability-icon">⚙️</div>
+                    <h3>响应式设计</h3>
+                    <p>我们的网站设计适配所有设备，无论是电脑、平板还是手机，都能完美呈现。</p>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🎨</div>
+                    <h3>创意UI设计</h3>
+                    <p>我们的设计师会为您创造独特的视觉体验，让您的网站脱颖而出。</p>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">📱</div>
+                    <h3>用户体验优化</h3>
+                    <p>我们注重用户体验，确保您的网站易于导航，提高用户转化率。</p>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🚀</div>
+                    <h3>性能优化</h3>
+                    <p>我们的网站加载速度快，性能优秀，提供更好的用户体验。</p>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🔍</div>
+                    <h3>SEO优化</h3>
+                    <p>我们的网站符合搜索引擎优化标准，帮助您提高网站排名。</p>
+                </div>
+                <div class="capability-item">
+                    <div class="capability-icon">🔒</div>
+                    <h3>安全可靠</h3>
+                    <p>我们注重网站安全，保护您的网站免受黑客攻击。</p>
+                </div>
+            </div>
+
+            <div class="section-title team">
+                <h2>我们的团队</h2>
+                <p>专业的人做专业的事</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-img" style="background-image: url('https://via.placeholder.com/300x300');"></div>
+                    <div class="member-info">
+                        <h3>张伟</h3>
+                        <p>创始人 / 项目总监</p>
+                        <p>拥有10年网站设计和开发经验，曾服务于多家知名企业。</p>
+                        <ul class="social-links">
+                            <li><a href="#" title="微信">W</a></li>
+                            <li><a href="#" title="微博">B</a></li>
+                            <li><a href="#" title="邮箱">E</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-img" style="background-image: url('https://via.placeholder.com/300x300/f39c12/fff');"></div>
+                    <div class="member-info">
+                        <h3>李娜</h3>
+                        <p>UI/UX设计师</p>
+                        <p>专注于用户体验和界面设计，擅长创造美观且实用的网站设计。</p>
+                        <ul class="social-links">
+                            <li><a href="#" title="微信">W</a></li>
+                            <li><a href="#" title="微博">B</a></li>
+                            <li><a href="#" title="邮箱">E</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-img" style="background-image: url('https://via.placeholder.com/300x300/27ae60/fff');"></div>
+                    <div class="member-info">
+                        <h3>王强</h3>
+                        <p>前端开发工程师</p>
+                        <p>精通HTML、CSS、JavaScript等前端技术，追求卓越的代码质量。</p>
+                        <ul class="social-links">
+                            <li><a href="#" title="微信">W</a></li>
+                            <li><a href="#" title="微博">B</a></li>
+                            <li><a href="#" title="邮箱">E</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-img" style="background-image: url('https://via.placeholder.com/300x300/8e44ad/fff');"></div>
+                    <div class="member-info">
+                        <h3>赵丽</h3>
+                        <p>后端工程师</p>
+                        <p>负责系统架构和后端开发，确保网站稳定、高效运行。</p>
+                        <ul class="social-links">
+                            <li><a href="#" title="微信">W</a></li>
+                            <li><a href="#" title="微博">B</a></li>
+                            <li><a href="#" title="邮箱">E</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>微企定制是专注于为小微企业提供高质量网站定制服务的团队，我们致力于帮助小微企业提升品牌形象，拓展在线业务。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>电话：123-4567-8910</li>
+                        <li>邮箱：contact@weiqi.com</li>
+                        <li>地址：北京市朝阳区科技园A座501</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul class="nav-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="cases.html">案例</a></li>
+                        <li><a href="requirement.html">需求提交</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 微企定制 版权所有</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

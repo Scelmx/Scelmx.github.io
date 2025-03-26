@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>需求管理 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #1a2530;
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .brand-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .user-details {
+            flex-grow: 1;
+        }
+        .user-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .user-role {
+            font-size: 12px;
+            color: #bbb;
+        }
+        .menu {
+            padding: 10px 0;
+        }
+        .menu-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #bbb;
+            padding: 15px 20px 5px;
+        }
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .menu-item.active {
+            background-color: #3498db;
+        }
+        .menu-icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .search-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .filter-select {
+            padding: 9px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px;
+            min-width: 150px;
+        }
+        .req-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .req-table th,
+        .req-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .req-table th {
+            background-color: #f9f9f9;
+            font-weight: 500;
+        }
+        .req-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+        .status.new {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .status.processing {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+        .status.completed {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+        .status.archived {
+            background-color: rgba(149, 165, 166, 0.1);
+            color: #95a5a6;
+        }
+        .action-btn {
+            display: inline-block;
+            background-color: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #ddd;
+        }
+        .action-btn.view {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .action-btn.view:hover {
+            background-color: #2980b9;
+        }
+        .action-btn.archive {
+            background-color: #95a5a6;
+            color: #fff;
+        }
+        .action-btn.archive:hover {
+            background-color: #7f8c8d;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 20px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            display: flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .pagination a:hover, .pagination a.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: auto;
+            padding: 50px 0;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: modalOpen 0.3s ease;
+        }
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        .form-group + .form-group {
+            margin-left: 15px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-control:disabled {
+            background-color: #f9f9f9;
+        }
+        .detail-row {
+            margin-bottom: 15px;
+        }
+        .detail-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .detail-text {
+            line-height: 1.6;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background-color: #f1f1f1;
+        }
+        .note-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .note-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .note-add {
+            font-size: 12px;
+            color: #3498db;
+            cursor: pointer;
+        }
+        .note-item {
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+        .note-text {
+            font-size: 14px;
+        }
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        .status-select {
+            min-width: 150px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+            background-color: #e3f2fd;
+            color: #2196f3;
+        }
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            color: #3498db;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .download-link:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+        .download-icon {
+            margin-right: 5px;
+        }
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group + .form-group {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-logo">微</div>
+                <div class="brand-text">微企定制后台</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div class="user-details">
+                    <div class="user-name">管理员</div>
+                    <div class="user-role">系统管理员</div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-title">主菜单</div>
+                <a href="dashboard.html" class="menu-item">
+                    <div class="menu-icon">📊</div>
+                    仪表盘
+                </a>
+                <a href="case-management.html" class="menu-item">
+                    <div class="menu-icon">📁</div>
+                    案例管理
+                </a>
+                <a href="requirement-management.html" class="menu-item active">
+                    <div class="menu-icon">📝</div>
+                    需求管理
+                </a>
+                <a href="contact-management.html" class="menu-item">
+                    <div class="menu-icon">📞</div>
+                    联系我们管理
+                </a>
+                
+                <div class="menu-title">系统设置</div>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">👤</div>
+                    用户管理
+                </a>
+                <a href="#" class="menu-item">
+                    <div class="menu-icon">⚙️</div>
+                    系统设置
+                </a>
+                <a href="index.html" class="menu-item">
+                    <div class="menu-icon">🚪</div>
+                    退出登录
+                </a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                <div class="page-title">需求管理</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">需求列表</div>
+                    <div>总计：18个需求</div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="搜索需求...">
+                            <button class="search-btn">搜索</button>
+                        </div>
+                        <div>
+                            <select class="filter-select">
+                                <option value="">所有需求类型</option>
+                                <option value="general">通用企业站</option>
+                                <option value="ecommerce">电商网站</option>
+                                <option value="service">服务行业</option>
+                            </select>
+                            <select class="filter-select">
+                                <option value="">所有状态</option>
+                                <option value="new">新提交</option>
+                                <option value="processing">处理中</option>
+                                <option value="completed">已完成</option>
+                                <option value="archived">已归档</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <table class="req-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>客户名称</th>
+                                <th>需求类型</th>
+                                <th>提交时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>张先生 (张氏餐饮)</td>
+                                <td>
+                                    <span class="tag">通用企业站</span>
+                                </td>
+                                <td>2023-09-10</td>
+                                <td><span class="status new">新提交</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="1">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="1">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>王小姐 (未来教育)</td>
+                                <td>
+                                    <span class="tag">通用企业站</span>
+                                </td>
+                                <td>2023-09-08</td>
+                                <td><span class="status processing">处理中</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="2">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="2">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>李先生 (李氏美容)</td>
+                                <td>
+                                    <span class="tag">服务行业</span>
+                                </td>
+                                <td>2023-09-05</td>
+                                <td><span class="status new">新提交</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="3">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="3">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>赵小姐 (自然生活商店)</td>
+                                <td>
+                                    <span class="tag">电商网站</span>
+                                </td>
+                                <td>2023-09-01</td>
+                                <td><span class="status processing">处理中</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="4">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="4">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>陈先生 (安心家政)</td>
+                                <td>
+                                    <span class="tag">服务行业</span>
+                                </td>
+                                <td>2023-08-28</td>
+                                <td><span class="status completed">已完成</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="5">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="5">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>刘女士 (甜蜜烘焙)</td>
+                                <td>
+                                    <span class="tag">电商网站</span>
+                                </td>
+                                <td>2023-08-20</td>
+                                <td><span class="status completed">已完成</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="6">查看详情</a>
+                                    <a href="#" class="action-btn archive" data-id="6">归档</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>孙先生 (语言培训中心)</td>
+                                <td>
+                                    <span class="tag">通用企业站</span>
+                                </td>
+                                <td>2023-08-15</td>
+                                <td><span class="status archived">已归档</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="7">查看详情</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>钱女士 (健康理疗)</td>
+                                <td>
+                                    <span class="tag">服务行业</span>
+                                </td>
+                                <td>2023-08-10</td>
+                                <td><span class="status archived">已归档</span></td>
+                                <td>
+                                    <a href="#" class="action-btn view" data-id="8">查看详情</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <ul class="pagination">
+                        <li><a href="#">&laquo;</a></li>
+                        <li><a href="#" class="active">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 需求详情模态框 -->
+    <div class="modal" id="viewRequirementModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">需求详情</div>
+                <button class="close-btn" id="closeViewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">需求ID</label>
+                        <input type="text" class="form-control" id="reqId" disabled value="#1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">提交时间</label>
+                        <input type="text" class="form-control" id="reqDate" disabled value="2023-09-10 15:30:22">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">当前状态</label>
+                        <select class="form-control status-select" id="reqStatus">
+                            <option value="new">新提交</option>
+                            <option value="processing">处理中</option>
+                            <option value="completed">已完成</option>
+                            <option value="archived">已归档</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">客户姓名</label>
+                        <input type="text" class="form-control" id="reqName" disabled value="张先生">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">公司名称</label>
+                        <input type="text" class="form-control" id="reqCompany" disabled value="张氏餐饮">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">电话</label>
+                        <input type="text" class="form-control" id="reqPhone" disabled value="138****5678">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">邮箱</label>
+                        <input type="text" class="form-control" id="reqEmail" disabled value="zhang@example.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">需求文件</label>
+                    <div>
+                        <a href="#" class="download-link">
+                            <span class="download-icon">📄</span>
+                            需求文档.docx (1.2MB)
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">客户留言</label>
+                    <textarea class="form-control" id="reqMessage" disabled rows="3">我们希望开发一个餐厅网站，主要功能包括菜单展示、预约订座和外卖订购。希望设计能够突出我们的川菜特色，色调偏红色系。</textarea>
+                </div>
+                
+                <div class="note-container">
+                    <div class="note-title">
+                        <span>内部备注</span>
+                        <span class="note-add" id="addNoteToggle">+ 添加备注</span>
+                    </div>
+                    
+                    <div id="addNoteForm" style="display:none; margin-bottom: 15px;">
+                        <textarea class="form-control" id="newNote" rows="2" placeholder="输入备注内容..."></textarea>
+                        <div style="text-align: right; margin-top: 10px;">
+                            <button class="action-btn" id="cancelNote">取消</button>
+                            <button class="action-btn view" id="submitNote">添加</button>
+                        </div>
+                    </div>
+                    
+                    <div id="notesList">
+                        <div class="note-item">
+                            <div class="note-header">
+                                <span>小李 (销售顾问)</span>
+                                <span>2023-09-10 16:45</span>
+                            </div>
+                            <div class="note-text">已联系客户，确认需求细节。客户预算在8000-10000元之间，工期要求一个月内完成。</div>
+                        </div>
+                        <div class="note-item">
+                            <div class="note-header">
+                                <span>小王 (项目经理)</span>
+                                <span>2023-09-11 09:30</span>
+                            </div>
+                            <div class="note-text">已安排前端设计师开始设计方案，计划本周五前给客户提供初稿。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="closeView">关闭</button>
+                <button class="action-btn view" id="saveStatus">保存状态</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const viewRequirementModal = document.getElementById('viewRequirementModal');
+            const closeViewModalBtn = document.getElementById('closeViewModal');
+            const closeViewBtn = document.getElementById('closeView');
+            const viewButtons = document.querySelectorAll('.action-btn.view');
+            const archiveButtons = document.querySelectorAll('.action-btn.archive');
+            const addNoteToggle = document.getElementById('addNoteToggle');
+            const addNoteForm = document.getElementById('addNoteForm');
+            const cancelNote = document.getElementById('cancelNote');
+            const submitNote = document.getElementById('submitNote');
+            const saveStatus = document.getElementById('saveStatus');
+            
+            // 侧边栏切换
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // 响应式处理
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // 打开需求详情模态框
+            viewButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const reqId = this.getAttribute('data-id');
+                    
+                    // 在实际应用中，这里会根据需求ID从后端获取需求数据
+                    // 此处仅做示例，实际数据已在HTML中
+                    
+                    viewRequirementModal.style.display = 'block';
+                });
+            });
+            
+            // 关闭需求详情模态框
+            closeViewModalBtn.addEventListener('click', function() {
+                viewRequirementModal.style.display = 'none';
+            });
+            
+            closeViewBtn.addEventListener('click', function() {
+                viewRequirementModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭模态框
+            window.addEventListener('click', function(event) {
+                if (event.target === viewRequirementModal) {
+                    viewRequirementModal.style.display = 'none';
+                }
+            });
+            
+            // 归档需求操作
+            archiveButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const reqId = this.getAttribute('data-id');
+                    const confirmArchive = confirm('确定要归档这个需求吗？');
+                    
+                    if (confirmArchive) {
+                        // 在实际应用中，这里会调用后端API归档需求
+                        alert('需求已归档');
+                    }
+                });
+            });
+            
+            // 添加备注表单的显示和隐藏
+            addNoteToggle.addEventListener('click', function() {
+                addNoteForm.style.display = 'block';
+                document.getElementById('newNote').focus();
+            });
+            
+            cancelNote.addEventListener('click', function() {
+                addNoteForm.style.display = 'none';
+                document.getElementById('newNote').value = '';
+            });
+            
+            // 提交备注
+            submitNote.addEventListener('click', function() {
+                const noteText = document.getElementById('newNote').value.trim();
+                
+                if (noteText) {
+                    // 在实际应用中，这里会提交备注到后端
+                    // 此处仅做示例，模拟添加一条新备注
+                    const notesList = document.getElementById('notesList');
+                    const currentDate = new Date().toLocaleString('zh-CN');
+                    
+                    const newNoteHtml = `
+                        <div class="note-item">
+                            <div class="note-header">
+                                <span>管理员</span>
+                                <span>${currentDate}</span>
+                            </div>
+                            <div class="note-text">${noteText}</div>
+                        </div>
+                    `;
+                    
+                    notesList.insertAdjacentHTML('afterbegin', newNoteHtml);
+                    document.getElementById('newNote').value = '';
+                    addNoteForm.style.display = 'none';
+                } else {
+                    alert('请输入备注内容');
+                }
+            });
+            
+            // 保存状态
+            saveStatus.addEventListener('click', function() {
+                const newStatus = document.getElementById('reqStatus').value;
+                
+                // 在实际应用中，这里会将新状态提交到后端
+                alert('状态已更新');
+                viewRequirementModal.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html> 

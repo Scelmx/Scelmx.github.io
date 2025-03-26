@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案例详情 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        .nav-links li {
+            margin-left: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        .case-header {
+            position: relative;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+        }
+        .case-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 15px;
+        }
+        .case-header-content h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+        .case-header-content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .case-meta {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .case-meta-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .case-meta-item i {
+            margin-right: 5px;
+        }
+        .breadcrumb {
+            display: flex;
+            margin-bottom: 10px;
+            list-style: none;
+        }
+        .breadcrumb li {
+            margin-right: 5px;
+        }
+        .breadcrumb li:after {
+            content: '/';
+            margin-left: 5px;
+        }
+        .breadcrumb li:last-child:after {
+            display: none;
+        }
+        .breadcrumb a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-title h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .section-title p {
+            color: #777;
+            font-size: 16px;
+        }
+        .case-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        .case-details p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .case-details h3 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+        }
+        .case-details ul {
+            margin: 15px 0 15px 20px;
+        }
+        .case-details li {
+            margin-bottom: 8px;
+        }
+        .case-sidebar {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 5px;
+        }
+        .case-info-item {
+            margin-bottom: 20px;
+        }
+        .case-info-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .case-info-item p {
+            margin-bottom: 5px;
+        }
+        .technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tech-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e1f0fa;
+            color: #3498db;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .gallery {
+            margin: 40px 0;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .cta-section {
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            margin-top: 50px;
+        }
+        .cta-section h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .cta-section p {
+            font-size: 18px;
+            color: #777;
+            margin-bottom: 25px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+        }
+        .btn-outline:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .related-cases {
+            padding: 50px 0;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .case-item {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .case-item:hover {
+            transform: translateY(-5px);
+        }
+        .case-img {
+            height: 220px;
+            background-color: #f5f5f5;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .case-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .case-content-preview {
+            padding: 20px;
+        }
+        .case-content-preview h3 {
+            margin-bottom: 10px;
+        }
+        .case-content-preview p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .contact-info {
+            list-style: none;
+        }
+        .contact-info li {
+            margin-bottom: 10px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">微企定制</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html">关于我们</a></li>
+                    <li><a href="cases.html" class="active">案例</a></li>
+                    <li><a href="requirement.html">需求提交</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="case-header" style="background-image: url('https://via.placeholder.com/1500x800');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="case-header-content">
+                <ul class="breadcrumb">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="cases.html">案例</a></li>
+                    <li>川香餐厅官网</li>
+                </ul>
+                <h1>川香餐厅官网</h1>
+                <div class="case-meta">
+                    <div class="case-meta-item">
+                        <i>🏷️</i> 餐饮美食
+                    </div>
+                    <div class="case-meta-item">
+                        <i>📅</i> 2023年3月
+                    </div>
+                </div>
+                <p>为本地知名川菜餐厅打造的品牌形象网站，展示菜品特色和线上预订功能。</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <div class="case-content">
+                <div class="case-details">
+                    <h3>项目背景</h3>
+                    <p>川香餐厅是一家拥有10年历史的本地知名川菜餐厅，以其正宗的川菜和优质的服务在当地享有盛誉。随着互联网的普及和消费者习惯的改变，川香餐厅希望通过建立专业的品牌官网，扩大餐厅知名度，并提供在线预订和菜单浏览功能，提升顾客体验。</p>
+                    
+                    <h3>设计理念</h3>
+                    <p>网站设计以红色和金色为主色调，体现川菜文化的热情和高雅。整体风格简约大气，突出美食图片的展示，让用户第一眼就能感受到川菜的魅力。我们注重用户体验，确保网站在各种设备上都能完美呈现，并优化了页面加载速度，提供流畅的浏览体验。</p>
+                    
+                    <h3>功能特点</h3>
+                    <ul>
+                        <li>响应式设计，适配各种设备</li>
+                        <li>在线预订系统，方便顾客预约就餐</li>
+                        <li>高清菜品展示，分类清晰</li>
+                        <li>餐厅环境展示，增强品牌形象</li>
+                        <li>联系方式和地图导航，便于顾客到店</li>
+                        <li>顾客评价展示，提升信任度</li>
+                    </ul>
+                    
+                    <h3>实施过程</h3>
+                    <p>项目从需求分析到最终上线，历时一个月。我们的团队首先深入了解了川香餐厅的品牌理念和目标客户，然后进行了竞品分析和用户研究，确定了网站的设计方向和功能需求。</p>
+                    <p>设计阶段，我们创作了3套不同风格的设计方案，最终确定了现在的设计风格。开发阶段，我们使用了现代的前端技术，确保网站性能优异，同时为客户提供了简单易用的后台管理系统，方便其更新菜单和管理预订信息。</p>
+                    
+                    <div class="gallery">
+                        <h3>项目展示</h3>
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <img src="https://via.placeholder.com/600x400" alt="首页展示">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://via.placeholder.com/600x400/f39c12/fff" alt="菜单页面">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://via.placeholder.com/600x400/27ae60/fff" alt="预订系统">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://via.placeholder.com/600x400/8e44ad/fff" alt="移动端展示">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>项目成果</h3>
+                    <p>网站上线后，川香餐厅的在线预订量显著增加，新客户增长了30%。网站的菜品展示页面吸引了大量用户浏览，有效提升了餐厅的品牌形象。客户对网站的功能和设计非常满意，尤其是简单易用的预订系统，大大提高了客户的满意度。</p>
+                </div>
+                
+                <div class="case-sidebar">
+                    <div class="case-info-item">
+                        <h4>客户信息</h4>
+                        <p><strong>客户名称：</strong>川香餐厅</p>
+                        <p><strong>行业类型：</strong>餐饮美食</p>
+                        <p><strong>项目周期：</strong>1个月</p>
+                    </div>
+                    
+                    <div class="case-info-item">
+                        <h4>项目类型</h4>
+                        <p>品牌官网</p>
+                        <p>在线预订系统</p>
+                        <p>后台管理系统</p>
+                    </div>
+                    
+                    <div class="case-info-item">
+                        <h4>使用技术</h4>
+                        <div class="technologies">
+                            <span class="tech-tag">HTML5</span>
+                            <span class="tech-tag">CSS3</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Bootstrap</span>
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MySQL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="case-info-item">
+                        <h4>项目地址</h4>
+                        <p><a href="#">www.chuanxiang.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>想要打造类似的网站？</h2>
+            <p>无论您是餐饮、教育还是服务行业，我们都能为您定制专属的品牌官网，提升您的品牌形象。</p>
+            <a href="requirement.html" class="btn">立即咨询</a>
+            <a href="cases.html" class="btn btn-outline" style="margin-left: 15px;">查看更多案例</a>
+        </div>
+    </section>
+
+    <section class="related-cases">
+        <div class="container">
+            <div class="section-title">
+                <h2>相关案例</h2>
+                <p>您可能还对这些案例感兴趣</p>
+            </div>
+            
+            <div class="related-grid">
+                <div class="case-item">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/3498db/fff');">
+                        <span class="case-category">餐饮美食</span>
+                    </div>
+                    <div class="case-content-preview">
+                        <h3>甜蜜烘焙坊</h3>
+                        <p>专注于手工蛋糕和甜点的烘焙店网站，展示产品和线上订购系统。</p>
+                        <a href="case-detail.html?id=6" class="btn">查看详情</a>
+                    </div>
+                </div>
+                
+                <div class="case-item">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/e74c3c/fff');">
+                        <span class="case-category">餐饮美食</span>
+                    </div>
+                    <div class="case-content-preview">
+                        <h3>品味咖啡馆</h3>
+                        <p>精品咖啡馆的品牌官网，展示特色咖啡和休闲环境。</p>
+                        <a href="case-detail.html?id=10" class="btn">查看详情</a>
+                    </div>
+                </div>
+                
+                <div class="case-item">
+                    <div class="case-img" style="background-image: url('https://via.placeholder.com/350x220/2ecc71/fff');">
+                        <span class="case-category">餐饮美食</span>
+                    </div>
+                    <div class="case-content-preview">
+                        <h3>绿色有机餐厅</h3>
+                        <p>主打有机健康食材的餐厅网站，突出品牌理念和环保特色。</p>
+                        <a href="case-detail.html?id=11" class="btn">查看详情</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>微企定制是专注于为小微企业提供高质量网站定制服务的团队，我们致力于帮助小微企业提升品牌形象，拓展在线业务。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>电话：123-4567-8910</li>
+                        <li>邮箱：contact@weiqi.com</li>
+                        <li>地址：北京市朝阳区科技园A座501</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul class="nav-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="cases.html">案例</a></li>
+                        <li><a href="requirement.html">需求提交</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 微企定制 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 获取URL参数，根据参数加载不同案例内容
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const caseId = urlParams.get('id');
+            
+            // 这里可以根据caseId加载不同的案例内容
+            console.log('当前案例ID:', caseId || '1');
+            
+            // 实际应用中可以从后端API获取案例数据
+        });
+    </script>
+</body>
+</html> 

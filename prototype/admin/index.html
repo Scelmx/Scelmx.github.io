@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理系统 - 微企定制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .login-header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .login-form {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .remember-me input {
+            margin-right: 10px;
+        }
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .forgot-password a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        .company-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .company-logo img {
+            height: 60px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>微企定制管理系统</h1>
+            <p>请登录以访问管理后台</p>
+        </div>
+        <div class="login-form">
+            <div class="company-logo">
+                <div style="font-size: 36px; font-weight: bold; color: #3498db;">微企定制</div>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                用户名或密码错误，请重新输入。
+            </div>
+            
+            <form id="loginForm" action="dashboard.html">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" class="form-control" id="username" placeholder="请输入用户名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" id="password" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">记住我</label>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#">忘记密码？</a>
+                </div>
+                
+                <button type="submit" class="btn">登录</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            loginForm.addEventListener('submit', function(e) {
+                // 在实际应用中，会通过AJAX提交到后端进行验证
+                // 这里仅做演示，使用硬编码的用户名和密码
+                if (usernameInput.value === 'admin' && passwordInput.value === '123456') {
+                    // 登录成功，跳转到仪表盘页面
+                    // 默认表单行为会导航到dashboard.html
+                } else {
+                    // 登录失败，显示错误消息
+                    e.preventDefault();
+                    errorMessage.style.display = 'block';
+                    
+                    // 2秒后隐藏错误消息
+                    setTimeout(function() {
+                        errorMessage.style.display = 'none';
+                    }, 2000);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
