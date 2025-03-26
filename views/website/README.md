@@ -1,54 +1,88 @@
-# React + TypeScript + Vite
+# 企业网站前端
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+这是基于React和Ant Design构建的企业网站前端项目。
 
-Currently, two official plugins are available:
+## 功能特点
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 响应式设计，适配各种设备尺寸
+- 案例展示页面
+- 团队介绍页面
+- 公司简介页面
+- 需求提交功能
+- 文件上传功能
 
-## Expanding the ESLint configuration
+## 技术栈
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- TypeScript
+- Ant Design
+- Vite
+- Axios
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 环境要求
+
+- Node.js (v16+)
+- npm或yarn或pnpm包管理器
+
+## 安装与配置
+
+1. 安装依赖包
+
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. 配置环境变量
+   - 将`.env.example`复制为`.env.local`
+   - 根据实际情况修改API地址
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+cp .env.example .env.local
 ```
+
+## 启动服务
+
+### 开发环境
+
+```bash
+pnpm dev
+```
+
+### 生产环境构建
+
+```bash
+pnpm build
+```
+
+构建后的文件将生成在`dist`目录，可以部署到任何静态文件服务器。
+
+## 文件结构
+
+```
+src/
+  ├── assets/       # 静态资源文件
+  ├── components/   # 可复用的组件
+  ├── hooks/        # 自定义钩子函数
+  ├── layouts/      # 布局组件
+  ├── pages/        # 页面组件
+  ├── services/     # API服务
+  ├── styles/       # 全局样式
+  ├── types/        # TypeScript类型定义
+  ├── utils/        # 工具函数
+  ├── App.tsx       # 应用入口组件
+  └── main.tsx      # 应用入口点
+```
+
+## 需求提交功能
+
+网站包含一个需求提交页面，用户可以在此上传需求文档并提供联系信息。该功能需要后端API支持：
+
+1. 下载模板：`GET /templates/:filename`
+2. 提交需求：`POST /requirements`
+
+## 开发与扩展
+
+- 遵循组件化设计原则
+- 使用TypeScript确保类型安全
+- 使用Ant Design组件库提高开发效率
+- 使用Axios处理API请求

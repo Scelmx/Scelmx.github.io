@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Typography, Row, Col, Card, Button, Form, Input, Upload, message, Steps, Collapse, Alert } from 'antd';
+import { Typography, Row, Col, Card, Button, Form, Input, Upload, message, Steps, Collapse, Alert, Spin } from 'antd';
 import { UploadOutlined, InboxOutlined, PhoneOutlined, MailOutlined, UserOutlined, BankOutlined, DownloadOutlined, FormOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
+import axios from 'axios';
 
 const { Title, Paragraph } = Typography;
 const { Panel } = Collapse;
@@ -14,10 +15,13 @@ interface TemplateItem {
   fileName: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 const Requirement: React.FC = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // 需求模板数据
   const templates: TemplateItem[] = [
@@ -90,30 +94,61 @@ const Requirement: React.FC = () => {
       return false; // 阻止自动上传
     },
     fileList,
+    multiple: false,
   };
 
   // 表单提交处理
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     if (fileList.length === 0) {
       message.error('请上传需求文档');
       return;
     }
 
-    console.log('表单值:', values);
-    console.log('上传文件:', fileList);
+    setSubmitting(true);
     
-    // 模拟提交成功
-    message.success('需求提交成功，我们将尽快与您联系!');
-    setSubmitSuccess(true);
-    
-    // 重置表单和文件列表
-    form.resetFields();
-    setFileList([]);
-    
-    // 5秒后隐藏成功提示
-    setTimeout(() => {
-      setSubmitSuccess(false);
-    }, 5000);
+    try {
+      // 准备表单数据
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('company', values.company);
+      formData.append('phone', values.phone);
+      formData.append('email', values.email);
+      formData.append('description', values.message || '');
+      formData.append('file', fileList[0] as any);
+
+      // 发送API请求
+      const response = await axios.post(`${API_BASE_URL}/requirements`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data) {
+        message.success('需求提交成功，我们将尽快与您联系!');
+        setSubmitSuccess(true);
+        
+        // 重置表单和文件列表
+        form.resetFields();
+        setFileList([]);
+        
+        // 5秒后隐藏成功提示
+        setTimeout(() => {
+          setSubmitSuccess(false);
+        }, 5000);
+      }
+    } catch (error) {
+      console.error('提交需求失败:', error);
+      let errorMsg = '提交需求失败，请稍后重试';
+      
+      if (axios.isAxiosError(error) && error.response) {
+        const responseData = error.response.data;
+        errorMsg = responseData.message || errorMsg;
+      }
+      
+      message.error(errorMsg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -180,7 +215,7 @@ const Requirement: React.FC = () => {
                     </Paragraph>
                     <Button
                       type="primary"
-                      href={`/templates/${template.fileName}`}
+                      href={`${API_BASE_URL}/templates/${template.fileName}`}
                       download={template.fileName}
                       icon={<DownloadOutlined />}
                     >
@@ -205,76 +240,84 @@ const Requirement: React.FC = () => {
                 />
               )}
 
-              <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                <Form.Item
-                  label="上传需求文档"
-                  name="requirement"
-                  rules={[{ required: true, message: '请上传需求文档!' }]}
-                >
-                  <Upload.Dragger {...uploadProps}>
-                    <p className="ant-upload-drag-icon">
-                      <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">点击或拖拽文件到此处上传</p>
-                    <p className="ant-upload-hint">
-                      支持 .doc, .docx, .pdf 格式，文件大小不超过10MB
-                    </p>
-                  </Upload.Dragger>
-                </Form.Item>
+              <Spin spinning={submitting} tip="提交中...">
+                <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                  <Form.Item
+                    label="上传需求文档"
+                    name="requirement"
+                    rules={[{ required: true, message: '请上传需求文档!' }]}
+                  >
+                    <Upload.Dragger {...uploadProps}>
+                      <p className="ant-upload-drag-icon">
+                        <InboxOutlined />
+                      </p>
+                      <p className="ant-upload-text">点击或拖拽文件到此处上传</p>
+                      <p className="ant-upload-hint">
+                        支持 .doc, .docx, .pdf 格式，文件大小不超过10MB
+                      </p>
+                    </Upload.Dragger>
+                  </Form.Item>
 
-                <Form.Item
-                  label="您的姓名"
-                  name="name"
-                  rules={[{ required: true, message: '请输入您的姓名!' }]}
-                >
-                  <Input prefix={<UserOutlined />} placeholder="请输入您的姓名" />
-                </Form.Item>
+                  <Form.Item
+                    label="您的姓名"
+                    name="name"
+                    rules={[{ required: true, message: '请输入您的姓名!' }]}
+                  >
+                    <Input prefix={<UserOutlined />} placeholder="请输入您的姓名" />
+                  </Form.Item>
 
-                <Form.Item
-                  label="公司名称"
-                  name="company"
-                  rules={[{ required: true, message: '请输入公司名称!' }]}
-                >
-                  <Input prefix={<BankOutlined />} placeholder="请输入公司名称" />
-                </Form.Item>
+                  <Form.Item
+                    label="公司名称"
+                    name="company"
+                    rules={[{ required: true, message: '请输入公司名称!' }]}
+                  >
+                    <Input prefix={<BankOutlined />} placeholder="请输入公司名称" />
+                  </Form.Item>
 
-                <Form.Item
-                  label="联系电话"
-                  name="phone"
-                  rules={[
-                    { required: true, message: '请输入联系电话!' },
-                    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码!' },
-                  ]}
-                >
-                  <Input prefix={<PhoneOutlined />} placeholder="请输入联系电话" />
-                </Form.Item>
+                  <Form.Item
+                    label="联系电话"
+                    name="phone"
+                    rules={[
+                      { required: true, message: '请输入联系电话!' },
+                      { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码!' },
+                    ]}
+                  >
+                    <Input prefix={<PhoneOutlined />} placeholder="请输入联系电话" />
+                  </Form.Item>
 
-                <Form.Item
-                  label="电子邮箱"
-                  name="email"
-                  rules={[
-                    { required: true, message: '请输入电子邮箱!' },
-                    { type: 'email', message: '请输入正确的邮箱格式!' },
-                  ]}
-                >
-                  <Input prefix={<MailOutlined />} placeholder="请输入电子邮箱" />
-                </Form.Item>
+                  <Form.Item
+                    label="电子邮箱"
+                    name="email"
+                    rules={[
+                      { required: true, message: '请输入电子邮箱!' },
+                      { type: 'email', message: '请输入正确的邮箱格式!' },
+                    ]}
+                  >
+                    <Input prefix={<MailOutlined />} placeholder="请输入电子邮箱" />
+                  </Form.Item>
 
-                <Form.Item label="其他补充说明（选填）" name="message">
-                  <TextArea
-                    placeholder="请输入其他需要补充的信息"
-                    rows={4}
-                    showCount
-                    maxLength={500}
-                  />
-                </Form.Item>
+                  <Form.Item label="其他补充说明（选填）" name="message">
+                    <TextArea
+                      placeholder="请输入其他需要补充的信息"
+                      rows={4}
+                      showCount
+                      maxLength={5000}
+                    />
+                  </Form.Item>
 
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" size="large" block>
-                    提交需求
-                  </Button>
-                </Form.Item>
-              </Form>
+                  <Form.Item>
+                    <Button 
+                      type="primary" 
+                      htmlType="submit" 
+                      size="large" 
+                      block
+                      loading={submitting}
+                    >
+                      提交需求
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Spin>
             </Card>
           </Col>
         </Row>
