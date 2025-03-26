@@ -14,13 +14,11 @@ import {
   message, 
   Modal, 
   Form,
-  Select,
   Drawer,
   Descriptions,
   Badge,
   Empty,
   List,
-  Avatar,
   Tooltip,
   Timeline,
   Upload,
@@ -29,14 +27,6 @@ import {
 import { 
   SearchOutlined, 
   DownloadOutlined, 
-  UserOutlined, 
-  CalendarOutlined, 
-  FileTextOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  MessageOutlined,
-  ClockCircleOutlined,
-  CheckCircleOutlined,
   PaperClipOutlined,
   EyeOutlined,
   DeleteOutlined,
@@ -51,11 +41,10 @@ import {
   CommentOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons';
-import type { TabsProps, MenuProps, UploadFile, UploadProps } from 'antd';
+import type { TabsProps, UploadFile } from 'antd';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
-const { Option } = Select;
 
 // 需求列表类型定义
 interface RequirementItem {
@@ -353,7 +342,7 @@ const RequirementManagement: React.FC = () => {
   // 需求列表数据状态
   const [data, setData] = useState(mockRequirements);
   // 加载状态
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // 当前选中的需求ID
   const [currentId, setCurrentId] = useState<string>('');
   // 详情抽屉是否可见
@@ -364,8 +353,7 @@ const RequirementManagement: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   // 搜索关键字
   const [searchText, setSearchText] = useState('');
-  // 表单状态
-  const [form] = Form.useForm();
+
   const [noteForm] = Form.useForm();
   
   // 获取当前需求数据
@@ -805,7 +793,7 @@ const RequirementManagement: React.FC = () => {
         <Table
           columns={columns}
           dataSource={data}
-          loading={loading}
+          // loading={loading}
           rowClassName={(record) => record.status === '未处理' ? 'ant-table-row-highlight' : ''}
           pagination={{
             showSizeChanger: true,

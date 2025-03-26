@@ -13,14 +13,12 @@ import {
   Modal,
   Form,
   Select,
-  DatePicker,
   Badge,
   Tooltip
 } from 'antd';
 import { 
   SearchOutlined, 
   PlusOutlined,
-
   EditOutlined, 
   DeleteOutlined, 
   MoreOutlined, 
@@ -32,7 +30,6 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 
-const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 // 案例状态对应的标签颜色

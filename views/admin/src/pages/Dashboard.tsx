@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Statistic, Table, Button, Typography, List, Badge, Divider } from 'antd';
+import { Card, Row, Col, Statistic, Table, Button, Typography, List, Badge } from 'antd';
 import { 
   FileOutlined, 
   EyeOutlined, 
@@ -159,7 +159,7 @@ const casesColumns = [
   {
     title: '操作',
     key: 'action',
-    render: (_: any, record: any) => (
+    render: () => (
       <span>
         <Button type="link" size="small">查看</Button>
         <Button type="link" size="small">编辑</Button>
